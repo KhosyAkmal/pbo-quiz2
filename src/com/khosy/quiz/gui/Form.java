@@ -5,6 +5,14 @@
  */
 package com.khosy.quiz.gui;
 
+import com.khosy.quiz.lib.ComboModel;
+import com.khosy.quiz.lib.Item;
+import com.khosy.quiz.lib.TabelModel;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author khosy
@@ -14,8 +22,41 @@ public class Form extends javax.swing.JFrame {
     /**
      * Creates new form form
      */
+    private int id = 0; // variabel id untuk membuat id kode
+    private String kode; // variabel kode untuk menyimpan kode
+    private ComboModel comboModel; // untuk membuat Jcombo box model
+    private DefaultTableModel tabelModel; // untuk membuat Jtable model
+    private ArrayList<Item> barang = new ArrayList<>(); //variabel barang untuk menyimpan barang
+    
     public Form() {
+        this.comboModel = new ComboModel(); // untuk menginstansi model dari Jcombo box
+            this.comboModel.tambahItem(new Item("Kopi", new Float(50000)));    //  
+            this.comboModel.tambahItem(new Item("Gula", new Float(20000)));    //  
+            this.comboModel.tambahItem(new Item("Susu", new Float(30000)));    //   
+        
+            //untuk membuat kolom nama
+        TabelModel tabelModel = new TabelModel();
+        this.tabelModel = new DefaultTableModel(tabelModel.getKolom(), 0);
+        
         initComponents();
+    }
+    
+    // untuk menambahkan id dengan penambahan 1
+    private void tambahId() {
+        this.id += 1;
+    }
+    
+    // untuk mengurangi id dengan pengurangan 1
+    private void kurangId() {
+        this.id -= 1;
+    }
+    
+    
+     private String setKode() {
+        this.tambahId();
+        String tglWkt = new SimpleDateFormat("yyMMdd").format(new Date()); // get Current date as String;
+        this.kode = String.format(tglWkt+"%02d", this.id);  // then merge it with id with 0 pad
+        return kode;
     }
 
     /**
@@ -155,7 +196,13 @@ public class Form extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void varNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varNewActionPerformed
-        // TODO add your handling code here:
+        this.varItem.setText("1");
+        this.varNew.setEnabled(false);
+        this.varCancel.setEnabled(true);
+        this.varAdd.setEnabled(true);
+        this.varItem.setEnabled(true);
+        this.varMenu.setEnabled(true);
+        this.varCode.setText(this.setKode());
     }//GEN-LAST:event_varNewActionPerformed
 
     private void varDellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varDellActionPerformed
