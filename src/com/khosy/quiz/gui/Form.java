@@ -8,10 +8,13 @@ package com.khosy.quiz.gui;
 import com.khosy.quiz.lib.ComboModel;
 import com.khosy.quiz.lib.Item;
 import com.khosy.quiz.lib.TabelModel;
+import com.khosy.quiz.lib.Transaksi;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sun.applet.Main;
 
 /**
  *
@@ -109,7 +112,7 @@ public class Form extends javax.swing.JFrame {
         return this.varTab.getModel().getRowCount()<=0;
     }
     
-    // disable Remove and Save button if the table is empty
+    // tombol delete dan save akan disable jika tabel nya kosong
     private void cekBarang() {
         if(isEmpty()) {
             this.varSave.setEnabled(false);
@@ -119,6 +122,22 @@ public class Form extends javax.swing.JFrame {
             this.varDell.setEnabled(true);
         }
     }
+    
+    //kode ini membuat transaksi baru setelah melakukan transaksi sebelumnya
+    private void transaksiBaru() {
+        this.varItem.setText("");
+        this.varCode.setText("");
+        this.varNew.setEnabled(true);
+        this.varSave.setEnabled(false);
+        this.varCancel.setEnabled(false);
+        this.varAdd.setEnabled(false);
+        this.varDell.setEnabled(false);
+        this.varItem.setEnabled(false);
+        this.varMenu.setEnabled(false);
+        this.tabelModel.setRowCount(0);
+        this.barang.clear();
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the Form.
@@ -152,6 +171,11 @@ public class Form extends javax.swing.JFrame {
         });
 
         varAdd.setText("Add");
+        varAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                varAddActionPerformed(evt);
+            }
+        });
 
         varDell.setText("Remove");
         varDell.addActionListener(new java.awt.event.ActionListener() {
@@ -161,8 +185,18 @@ public class Form extends javax.swing.JFrame {
         });
 
         varCancel.setText("Cancel");
+        varCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                varCancelActionPerformed(evt);
+            }
+        });
 
         varSave.setText("Save");
+        varSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                varSaveActionPerformed(evt);
+            }
+        });
 
         code.setText("Code");
 
@@ -176,21 +210,8 @@ public class Form extends javax.swing.JFrame {
 
         varMenu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kopi", "Gula", "Susu" }));
 
-        varTab.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Nama", "Harga", "Jumlah"
-            }
-        ));
+        varTab.setModel(this.tabelModel);
         jScrollPane1.setViewportView(varTab);
-        if (varTab.getColumnModel().getColumnCount() > 0) {
-            varTab.getColumnModel().getColumn(2).setResizable(false);
-        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -267,12 +288,55 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_varNewActionPerformed
 
     private void varDellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varDellActionPerformed
-        // TODO add your handling code here:
+        if(varTab.getSelectedRow()<0){
+            String string = "Ingin menghapus yang mana? ";
+            JOptionPane.showMessageDialog(this, string, "Informasi ", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            int hitung = varTab.getSelectedRows().length;
+                for(int i = 0; i < hitung; i++){
+                    tabelModel.removeRow(varTab.getSelectedRow());
+                }
+        }
     }//GEN-LAST:event_varDellActionPerformed
 
     private void varCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varCodeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_varCodeActionPerformed
+
+    private void varCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varCancelActionPerformed
+        transaksiBaru();
+        this.kurangId();
+    }//GEN-LAST:event_varCancelActionPerformed
+
+    private void varAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varAddActionPerformed
+        String nama = this.varMenu.getSelectedItem().toString();
+        int jumlah = new Integer(this.varItem.getText());
+        
+        if(isDuplicate(nama)){
+            updateJumlah(nama, jumlah);
+        } else {
+            tabelModel.addRow(addItem(nama, jumlah));
+        }
+        this.cekBarang();
+    }//GEN-LAST:event_varAddActionPerformed
+
+    private void varSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varSaveActionPerformed
+        try {
+            for (int i = 0; i < tabelModel.getRowCount(); i++) {                   // loop each rows of the table then;
+                String nama = tabelModel.getValueAt(i, 0).toString();              // store the name and the qty into variables then;
+                float harga = new Float(tabelModel.getValueAt(i, 1).toString());   //
+                int jumlah = new Integer(tabelModel.getValueAt(i, 2).toString());     //                
+                this.barang.add(new Item(nama, harga, jumlah));                      //
+            }
+            Transaksi transaksi = new Transaksi(this.kode, this.barang); // instantiate Transact class with the current code and previously ommited cart
+            StringBuilder string = new StringBuilder(); // Stringbuilder to handle the transaction output
+            string.append(transaksi.detail()); // append transaction output
+            JOptionPane.showMessageDialog(this, string, "Detail Transaksi", JOptionPane.INFORMATION_MESSAGE); // call the dialog with the stringbuilder's string
+            transaksiBaru(); // start a new transaction after;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_varSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -301,7 +365,24 @@ public class Form extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
+            
+       try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        
         /* Create and display the Form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
