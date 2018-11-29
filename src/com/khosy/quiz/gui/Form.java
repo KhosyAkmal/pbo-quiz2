@@ -58,6 +58,67 @@ public class Form extends javax.swing.JFrame {
         this.kode = String.format(tglWkt+"%02d", this.id);  // then merge it with id with 0 pad
         return kode;
     }
+     
+     private Object[] addItem(String nama, int jumlah) {
+        float harga = 0;
+        Item[] items = this.comboModel.toArray();
+        for(int i = 0; i < items.length; i++) {
+            if(nama.equalsIgnoreCase(items[i].getNama())) {
+                harga = items[i].getHarga();
+            }
+        } 
+        Object[] o = {
+          nama,
+          harga,
+          jumlah
+        };
+        return o;
+    }
+     
+     // menambahkan fungsi update jumlah item
+    private void updateJumlah(String nama, int tambah) {
+        ArrayList<String> item = new ArrayList<>();
+        for (int i = 0; i < tabelModel.getRowCount(); i++){
+            item.add(tabelModel.getValueAt(i, 0).toString());
+        }
+        for(int i = 0; i < item.size(); i++) {
+            if(item.get(i).equals(nama)) {
+                int jumlah = new Integer(tabelModel.getValueAt(i, 2).toString());
+                tabelModel.setValueAt(jumlah+tambah, i, 2);  
+            } 
+        }
+    } 
+     
+     // fungsi untuk mengecek apakah ada item yang terduplikasi
+    private boolean isDuplicate(String nama) {
+        boolean hasil = false;
+        ArrayList<String> item = new ArrayList<>();
+        for (int i = 0; i < tabelModel.getRowCount(); i++){
+            item.add(tabelModel.getValueAt(i, 0).toString());
+        }
+        for(String i : item) {
+            if(i.equals(nama)) {
+                hasil = true;
+            } 
+        }
+        return hasil;
+    } 
+    
+    // fungsi ini untuk mengecek apakah tabel kosong?
+    private boolean isEmpty() {
+        return this.varTab.getModel().getRowCount()<=0;
+    }
+    
+    // disable Remove and Save button if the table is empty
+    private void cekBarang() {
+        if(isEmpty()) {
+            this.varSave.setEnabled(false);
+            this.varDell.setEnabled(false);
+        } else {
+            this.varSave.setEnabled(true);
+            this.varDell.setEnabled(true);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the Form.
