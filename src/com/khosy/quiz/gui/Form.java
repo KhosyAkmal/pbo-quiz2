@@ -33,9 +33,9 @@ public class Form extends javax.swing.JFrame {
     
     public Form() {
         this.comboModel = new ComboModel(); // untuk menginstansi model dari Jcombo box
-            this.comboModel.tambahItem(new Item("Kopi", new Float(50000)));    //  
-            this.comboModel.tambahItem(new Item("Gula", new Float(20000)));    //  
-            this.comboModel.tambahItem(new Item("Susu", new Float(30000)));    //   
+            this.comboModel.tambahItem(new Item("Kopi", new Float(50000))); 
+            this.comboModel.tambahItem(new Item("Gula", new Float(20000)));  
+            this.comboModel.tambahItem(new Item("Susu", new Float(30000)));  
         
             //untuk membuat kolom nama
         TabelModel tabelModel = new TabelModel();
@@ -278,7 +278,7 @@ public class Form extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void varNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varNewActionPerformed
-        this.varItem.setText("1");
+         this.varItem.setText("1");
         this.varNew.setEnabled(false);
         this.varCancel.setEnabled(true);
         this.varAdd.setEnabled(true);
@@ -298,7 +298,7 @@ public class Form extends javax.swing.JFrame {
                 }
         }
     }//GEN-LAST:event_varDellActionPerformed
-
+ 
     private void varCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varCodeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_varCodeActionPerformed
