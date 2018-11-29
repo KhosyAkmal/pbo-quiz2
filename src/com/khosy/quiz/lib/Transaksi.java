@@ -31,14 +31,14 @@ public class Transaksi {
     
     public String detail(){
         setTotal();
-        String str = "";
-        str += "Kode \t\t: " + this.kode + "\n";
-        str += "Daftar Belanja : \n";
+        String string = "";
+        string += "Kode : " + this.kode + "\n";
+        string += "Struk Belanja \n";
         for(Item item : this.items){
-            str += "\t" + item.getNama() + "(x" + item.getBanyak() + ") : " + item.getTotal() + "\n";
+            string += "\n"+item.getNama() + " : sebanyak " + item.getBanyak() + " Item, Harga " + "Rp. "+item.getTotal() + "\n";
         }
-        str += "Total \t\t : " + this.total;
-        return str;
+        string += "\nTotal : Rp. " + this.total;
+        return string;
     }
 
     
