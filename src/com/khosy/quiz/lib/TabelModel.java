@@ -5,11 +5,12 @@
  */
 package com.khosy.quiz.lib;
 
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author khosy
  */
-public class TabelModel {
+public class TabelModel extends DefaultTableModel{
     private String[] kolom; //variabel kolom untuk menyimpan nama kolom yang bertipe String array
 
     //kontruktor yang berisi atau menjelaskan tentang array kolom

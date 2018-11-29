@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class ComboModel {
     private ArrayList<Item> items; // varaibel items untuk menyimpan item dari objek
 
-    //disini saya menambahkan kontruktor dengan 1 parameter
-    public ComboModel(ArrayList<Item> items) {
-        this.items = items;
+    //kontruktor pada array list
+    public ComboModel() {
+      this.items = new ArrayList<>();
     }
     
     //mengkonversikan variabel array yang telah di buat agar bisa mengembalikan hasilnya
